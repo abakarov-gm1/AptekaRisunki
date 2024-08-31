@@ -1,0 +1,122 @@
+version: "3.9"
+
+services:
+
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"  # Включить API Traefik (не использовать в продакшн)
+      - "--providers.docker=true"  # Включить провайдер Docker
+      - "--entrypoints.web.address=:80"  # Настроить точку входа для HTTP
+    ports:
+      - "8080:8080"  # Порт для панели управления Traefik
+      - "80:80"  # Порт для HTTP трафика
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"  # Подключение Docker сокета
+    networks:
+      - dev
+
+
+  api:
+    build:
+      context: ./api/docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./api:/app
+      - uploads:/app/storage/app/public
+    networks:
+      - dev
+#    user: "1000:1000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+      - "traefik.http.services.api.loadbalancer.server.port=80"
+
+  api-php-fpm:
+    build:
+      context: ./api
+      dockerfile: ./docker/dev/Dockerfile
+    volumes:
+      - ./api:/app
+      - uploads:/app/storage/app/public
+    environment: # Переменные окружения для Laravel
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: app
+      DB_USERNAME: app
+      DB_PASSWORD: secret
+    networks:
+      - dev
+
+  api-php-cli:
+    build:
+      context: ./api
+      dockerfile: ./docker/dev/php-cli/Dockerfile
+    volumes:
+      - ./api:/app
+      - uploads:/app/storage/app/public
+    networks:
+      - dev
+    environment: # Переменные окружения для Laravel
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: app
+      DB_USERNAME: app
+      DB_PASSWORD: secret
+    user: "1000:1000"
+
+  client:
+    build:
+      context: ./client/docker/nginx
+      dockerfile: Dockerfile
+    networks:
+      - dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.client.rule=Host(`client.localhost`)"
+      - "traefik.http.services.client.loadbalancer.server.port=8081"
+
+  client-node:
+    build:
+      context: ./client
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - ./client:/app
+    networks:
+      - dev
+    user: "1000:1000"
+
+  client-node-cli:
+    build:
+      context: ./client
+      dockerfile: docker/dev/node-cli/Dockerfile
+    volumes:
+      - .:/app
+    networks:
+      - dev
+
+  db:
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: app
+    volumes:
+      - dbVolume:/var/lib/postgresql/data
+    networks:
+      - dev
+    ports:
+      - "5432:5432"
+
+
+
+networks:
+  dev:
+
+volumes:
+  uploads:
+  dbVolume:
+    driver: local
+

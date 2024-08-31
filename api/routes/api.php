@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function (){
         Route::get('/user/like/photo', [UserLikePhotoController::class, 'index']);
         Route::post('/like', [AddLikeController::class, 'index']);
 
+
     });
 
 });

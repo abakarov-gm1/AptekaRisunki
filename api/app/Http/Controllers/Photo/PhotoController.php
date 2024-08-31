@@ -14,7 +14,11 @@ class PhotoController extends Controller
         return $photo;
     }
 
-
+    public function popular(Request $request):object
+    {
+        $photo = Photo::query()->orderBy('likes', 'desc')->take(10)->get();
+        return $photo;
+    }
 
 }
 

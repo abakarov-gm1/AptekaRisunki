@@ -93,9 +93,10 @@ services:
       context: ./client
       dockerfile: docker/dev/node-cli/Dockerfile
     volumes:
-      - .:/app
+      - ./client:/app
     networks:
       - dev
+    user: "1000:1000"
 
   db:
     image: postgres:14.1-alpine

@@ -1,5 +1,14 @@
 module.exports = {
     images: {
-        domains: ['api.localhost'],
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'api.abakarov',
+                port: '',
+                pathname: '/**',
+
+            },
+        ],
     },
-};
+}
+

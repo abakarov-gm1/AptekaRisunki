@@ -12,8 +12,10 @@ class AddPhotoController extends Controller
     public function AddPhoto(Request $request):object
     {
         $user = Auth::user();
+
         $file = $request->file('image');
         $path = $file->store('images', 'public');
+
         $url = asset('storage/' . $path);
 
         Photo::query()->create([

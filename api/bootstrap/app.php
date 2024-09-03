@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'stripe/*',
 //            'http://api.localhost/img',
-            'http://api.localhost*',
+            'http://api.abakarov*',
 
         ]);
     })

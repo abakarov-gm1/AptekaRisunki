@@ -7,7 +7,7 @@ services:
     command:
       - "--api.insecure=true"  # Включить API Traefik (не использовать в продакшн)
       - "--providers.docker=true"  # Включить провайдер Docker
-      - "--entrypoints.web.address=:80"  # Настроить точку входа для HTTP
+      - "--entrypoints.http.address=:80"  # Настроить точку входа для HTTP
     ports:
       - "8080:8080"  # Порт для панели управления Traefik
       - "80:80"  # Порт для HTTP трафика
@@ -15,6 +15,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"  # Подключение Docker сокета
     networks:
       - dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dev"
 
 
   api:
@@ -26,11 +29,25 @@ services:
       - uploads:/app/storage/app/public
     networks:
       - dev
-#    user: "1000:1000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.api.rule=Host(`api.abakarov`)"
       - "traefik.http.services.api.loadbalancer.server.port=80"
+      - "traefik.docker.network=dev"
+      - "traefik.http.routers.api.entryPoints=http"
+
+  client:
+    build:
+      context: ./client/docker/nginx
+      dockerfile: Dockerfile
+    networks:
+      - dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.client.rule=Host(`client.abakarov`)"
+      - "traefik.http.services.client.loadbalancer.server.port=80"
+      - "traefik.docker.network=dev"
+      - "traefik.http.routers.client.entryPoints=http"
 
   api-php-fpm:
     build:
@@ -66,17 +83,6 @@ services:
       DB_USERNAME: app
       DB_PASSWORD: secret
     user: "1000:1000"
-
-  client:
-    build:
-      context: ./client/docker/nginx
-      dockerfile: Dockerfile
-    networks:
-      - dev
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.client.rule=Host(`client.localhost`)"
-      - "traefik.http.services.client.loadbalancer.server.port=8081"
 
   client-node:
     build:
@@ -115,6 +121,7 @@ services:
 
 networks:
   dev:
+    name: dev
 
 volumes:
   uploads:

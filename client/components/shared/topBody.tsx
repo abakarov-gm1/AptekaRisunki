@@ -1,13 +1,14 @@
 import React from 'react';
-import Image from 'next/image';
 
 const TopBody = () => {
     return (
 
-        <Image src='http://api.localhost/storage/images/RSbzsKHLEIlJ8kIcm76vQrLrrgtXKG0Nj0OETZWU.png' alt='sss'
-               width={128}
-               height={128}
+        <img src="/hand-drawn-flat-design-people-waving-illustration.png" alt='sss'
+               width={500}
+               height={500}
         />
+
+
 
     )
 };

@@ -14,11 +14,16 @@ Route::prefix('v1')->group(function (){
     Route::post('/login', [LoginController::class, 'index']);
 
     Route::middleware('auth:sanctum')->group(function (){
-
         Route::post('/logout', [LogoutController::class, 'index']);
+
         Route::post('/uploads/image', [AddPhotoController::class, 'AddPhoto']);
+
+        Route::post('/add/like', [AddLikeController::class, 'store']);
+        Route::get('/likes', [AddLikeController::class, 'index']);
+
         Route::get('/user/like/photo', [UserLikePhotoController::class, 'index']);
-        Route::post('/like', [AddLikeController::class, 'index']);
+
+//для возраста делаю выпадающий список на фронте)
 
     });
 

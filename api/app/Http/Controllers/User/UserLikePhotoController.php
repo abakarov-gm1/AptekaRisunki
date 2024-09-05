@@ -12,6 +12,6 @@ class UserLikePhotoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return $user->photos;
+        return $user->likesPhoto;
     }
 }

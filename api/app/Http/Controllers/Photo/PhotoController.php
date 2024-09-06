@@ -11,7 +11,7 @@ class PhotoController extends Controller
 {
     public function index():object
     {
-        $photo = Photo::all();
+        $photo = Photo::query()->where('published', 'true')->get();
         return $photo;
     }
 

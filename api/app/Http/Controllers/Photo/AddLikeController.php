@@ -11,14 +11,12 @@ use Illuminate\Support\Facades\Auth;
 class AddLikeController extends Controller
 {
 
-    public function index()
+    public function index(Photo $photo)
     {
-        $photo = Photo::query()->where('id', 'ccd46e2f-1780-4af9-a76b-08f8b29b584e')->first();
-        $count = count($photo->users);
-        return $photo->users;
+        $img = Photo::query()->where('id', $photo->id)->first();
+        $count = count($img->users);
+        return $img;
     }
-
-    // сделать удаление лайка
 
     public function store(Request $request)
     {

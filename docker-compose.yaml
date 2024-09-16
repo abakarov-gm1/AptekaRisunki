@@ -104,6 +104,28 @@ services:
       - dev
     user: "1000:1000"
 
+
+  panel-node:
+    build:
+      context: ./panel
+      dockerfile: docker/dev/node/Dockerfile
+    volumes:
+      - ./panel:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - dev
+    user: "1000:1000"
+
+
+  panel-node-cli:
+    build:
+      context: ./panel
+      dockerfile: docker/dev/cli/Dockerfile
+    volumes:
+      - ./panel:/app
+#    user: "1000:1000"
+
   db:
     image: postgres:14.1-alpine
     environment:

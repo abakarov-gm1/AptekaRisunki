@@ -9,17 +9,14 @@ use Ramsey\Uuid\Uuid;
 
 class PhotoController extends Controller
 {
-    public function index():object
-    {
-        $photo = Photo::query()->where('published', 'true')->get();
-        return $photo;
+    public function index(Request $request):object{
+        return Photo::query()->where('published', $request->get("flag"))->get();
     }
 
     public function popular(Request $request):object
     {
 //        изменить
-        $photo = Photo::query()->orderBy('likes', 'desc')->take(10)->get();
-        return $photo;
+        return Photo::query()->orderBy('likes', 'desc')->take(10)->get();
     }
 
 }

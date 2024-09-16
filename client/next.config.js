@@ -3,7 +3,7 @@ module.exports = {
         remotePatterns: [
             {
                 protocol: 'http',
-                hostname: 'api.abakarov',
+                hostname: 'api',
                 port: '',
                 pathname: '/**',
 

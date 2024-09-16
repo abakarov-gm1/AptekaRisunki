@@ -17,4 +17,14 @@ class DeletePhotoController extends Controller
         $user->likesPhoto()->detach($photo->id);
         return (["massage" => "Success"]);
     }
+
+    // удаление самой фотки
+    public function deletePhoto(Request $request){
+        $photo = Photo::query()->where('id', $request->get('id'));
+        $photo->delete();
+        return $request->json(["massage" => "Success"], 200);
+    }
 }
+
+
+

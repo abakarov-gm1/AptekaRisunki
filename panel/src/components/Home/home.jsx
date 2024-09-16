@@ -4,7 +4,7 @@ import logo from "../../logo.svg";
 import exit from "../../Exit.svg";
 import menu from "../../List Bullet.svg";
 import deleteIcon from "../../trash_full.png";
-import { useGetPhotosQuery, useUpdatePhotosMutation } from '../../services/PhotoService';
+import {useDeletePhotosMutation, useGetPhotosQuery, useUpdatePhotosMutation} from '../../services/PhotoService';
 import Loading from "./loading";
 
 const Home = () => {
@@ -16,6 +16,7 @@ const Home = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Состояние модалки удаления
     const [selectedMenuItem, setSelectedMenuItem] = useState('unpublished'); // По умолчанию выбираем "Не опубликованные"
     const [updatePhotos] = useUpdatePhotosMutation(); // Хук для обновления фото
+    const [deletePhoto] = useDeletePhotosMutation()
 
     const menuItems = [
         { label: 'Опубликованные', value: 'published' },
@@ -23,7 +24,7 @@ const Home = () => {
     ];
 
     // Передаем в useGetPhotosQuery текущее значение выбранного меню
-    const { data, error, isLoading } = useGetPhotosQuery(selectedMenuItem === 'published' ? true : false);
+    const { data, refetch , error, isLoading   } = useGetPhotosQuery(selectedMenuItem === 'published' ? true : false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -63,11 +64,13 @@ const Home = () => {
             console.log('Фотографии обновлены:', response);
             setSelectedPhotos([]); // Очищаем выбор после обновления
             setIsSelectAll(false); // Сбрасываем выбор всех
-            window.location.reload();
+            refetch()
+            // window.location.reload();
         } catch (err) {
             console.error('Ошибка при обновлении фотографий:', err);
         }
     };
+
 
     // Открытие модального окна с фотографией
     const openModal = (photo) => {
@@ -81,8 +84,8 @@ const Home = () => {
 
     // Открытие модалки подтверждения удаления
     const openDeleteModal = (photo) => {
-        setPhotoToDelete(photo);
-        setIsDeleteModalOpen(true);
+        setPhotoToDelete(photo)
+        setIsDeleteModalOpen(true)
     };
 
     // Закрытие модалки подтверждения удаления
@@ -91,13 +94,20 @@ const Home = () => {
         setPhotoToDelete(null);
     };
 
+
     // Подтверждение удаления фотографии
-    const handleConfirmDelete = () => {
-        if (data) {
-            setSelectedPhotos(selectedPhotos.filter((p) => p !== photoToDelete.id)); // Удаление из выделенных фото
+    const handleConfirmDelete = async () => {
+
+        // console.log(photoToDelete)
+        try {
+            const response = await deletePhoto({ id: photoToDelete.id }).unwrap();
+            refetch()
+        }catch (err){
+            console.log(err)
         }
         closeDeleteModal(); // Закрыть модалку
     };
+
 
     if (isLoading) return <Loading />;
     if (error) return <div>Error loading photos</div>;

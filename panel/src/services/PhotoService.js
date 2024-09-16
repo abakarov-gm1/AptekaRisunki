@@ -21,8 +21,21 @@ export const photoApi = createApi({
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }, // Bearer токен
             }),
         }),
+        deletePhotos: builder.mutation({
+            query: ({ id }) => ({
+                url: `panel/photos/delete`, // Путь к API для удаления фото по id
+                method: 'DELETE', // Метод DELETE
+                body: {id},
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }, // Bearer токен
+            }),
+        }),
+
     }),
 });
 
 // Экспортируем автоматически созданные хуки для использования в компонентах
-export const { useGetPhotosQuery,useUpdatePhotosMutation  } = photoApi;
+export const {
+    useGetPhotosQuery
+    ,useUpdatePhotosMutation
+    ,useDeletePhotosMutation
+} = photoApi;

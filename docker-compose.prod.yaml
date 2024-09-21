@@ -5,13 +5,13 @@ services:
   traefik:
     image: traefik:v2.10
     command:
-      - "--api.insecure=true"  # Включить API Traefik (не использовать в продакшн)
+      - "--api.insecure=true"  # Включить API Traefik
       - "--providers.docker=true"  # Включить провайдер Docker
       - "--entrypoints.http.address=:80"  # Настроить точку входа для HTTP
       - "--entrypoints.https.address=:443"  # Настроить точку входа для HTTPS
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"  # Настройка HTTP-01 challenge
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http"
-      - "--certificatesresolvers.myresolver.acme.email=abakarov_gm1@mail.ru"  # Замените на ваш email
+      - "--certificatesresolvers.myresolver.acme.email=abakarov_gm1@mail.ru"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"  # Хранилище сертификатов
     ports:
       - "8080:8080"  # Порт для панели управления Traefik

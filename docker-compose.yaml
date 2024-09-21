@@ -49,6 +49,19 @@ services:
       - "traefik.docker.network=dev"
       - "traefik.http.routers.client.entryPoints=http"
 
+  panel:
+    build:
+      context: ./panel/docker/dev/nginx
+      dockerfile: Dockerfile
+    networks:
+      - dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.panel.rule=Host(`panel.abakarov`)"
+      - "traefik.http.services.panel.loadbalancer.server.port=80"
+      - "traefik.docker.network=dev"
+      - "traefik.http.routers.panel.entryPoints=http"
+
   api-php-fpm:
     build:
       context: ./api
@@ -111,8 +124,8 @@ services:
       dockerfile: docker/dev/node/Dockerfile
     volumes:
       - ./panel:/app
-    ports:
-      - "3000:3000"
+#    ports:
+#      - "3000:3000"
     networks:
       - dev
     user: "1000:1000"

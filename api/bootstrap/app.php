@@ -21,8 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
             'stripe/*',
-//            'http://api.localhost/img',
             'http://api.abakarov*',
+            "https://api.abakarov.store*"
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

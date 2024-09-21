@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { logout } from "../../services/Auth/Auth";
 import logo from "../../logo.svg";
 import exit from "../../Exit.svg";
@@ -61,11 +61,8 @@ const Home = () => {
 
         try {
             const response = await updatePhotos({ ids: selectedPhotos }).unwrap();
-            console.log('Фотографии обновлены:', response);
             setSelectedPhotos([]); // Очищаем выбор после обновления
             setIsSelectAll(false); // Сбрасываем выбор всех
-            refetch()
-            // window.location.reload();
         } catch (err) {
             console.error('Ошибка при обновлении фотографий:', err);
         }
@@ -97,11 +94,8 @@ const Home = () => {
 
     // Подтверждение удаления фотографии
     const handleConfirmDelete = async () => {
-
-        // console.log(photoToDelete)
         try {
             const response = await deletePhoto({ id: photoToDelete.id }).unwrap();
-            refetch()
         }catch (err){
             console.log(err)
         }
@@ -120,7 +114,7 @@ const Home = () => {
                     className="p-2 rounded-md bg-gray-200 text-gray-600"
                     onClick={toggleMenu}
                 >
-                    <img src={menu} alt="menu" width={25} height={25} />
+                    <img src={menu} alt="menu" width={25} height={25}/>
                 </button>
                 <div className="text-lg font-bold text-gray-800">
                     {selectedMenuItem === 'published' ? 'Опубликованные фотографии' : 'Не опубликованные фотографии'}
@@ -130,7 +124,7 @@ const Home = () => {
                     onClick={logout}
                 >
                     <p className="text-black">Выход</p>
-                    <img src={exit} alt="logout" width={20} height={20} />
+                    <img src={exit} alt="logout" width={20} height={20}/>
                 </button>
             </div>
 
@@ -138,9 +132,10 @@ const Home = () => {
             <div
                 className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}
             >
-                <button className="p-4 text-lg text-white  w-full" onClick={toggleMenu}>
-                    <img src={logo} alt={'logo'} />
+                <button className="p-4 text-lg text-white w-full" onClick={toggleMenu}>
+                    <img src={logo} alt="logo"/>
                 </button>
+
                 <ul className="mt-4">
                     {menuItems.map((item, index) => (
                         <li
@@ -152,6 +147,13 @@ const Home = () => {
                         </li>
                     ))}
                 </ul>
+
+                <button
+                    className="absolute bottom-10 left-4 right-4 bg-red-400 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-500 focus:outline-none"
+                    onClick={toggleMenu}
+                >
+                    закрыть
+                </button>
             </div>
 
             {/* Контент страницы */}
@@ -179,7 +181,8 @@ const Home = () => {
                 {data && data.length === 0 ? (
                     <div className="text-center text-gray-500 mt-10">Нет фотографий</div>
                 ) : (
-                    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" style={{ maxWidth: '100%' }}>
+                    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                         style={{maxWidth: '100%'}}>
                         {data?.map((photo) => (
                             <div key={photo.id} className="bg-white p-4 rounded-lg shadow-md">
                                 <img
@@ -207,7 +210,7 @@ const Home = () => {
                                         onClick={() => openDeleteModal(photo)} // Открытие модалки удаления
                                         className="ml-2"
                                     >
-                                        <img src={deleteIcon} alt="delete" width={20} height={20} />
+                                        <img src={deleteIcon} alt="delete" width={20} height={20}/>
                                     </button>
                                 </div>
                             </div>
@@ -236,7 +239,7 @@ const Home = () => {
                             src={selectedPhotoForModal.link}
                             alt={`Photo ${selectedPhotoForModal.title}`}
                             className="object-contain"
-                            style={{ maxHeight: '90vh', maxWidth: '90vw' }} // Оригинальный размер изображения
+                            style={{maxHeight: '90vh', maxWidth: '90vw'}} // Оригинальный размер изображения
                         />
                     </div>
                 </div>

@@ -95,6 +95,9 @@ WORKDIR /app
 
 # Копирование установленных зависимостей и файлов приложения
 COPY --from=builder /app /app
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV APP_NAME="Рисунки"
+ENV APP_URL=https://api.abakarov.store
 
 # Настройка прав
 RUN chown www-data:www-data -R ./storage ./bootstrap/cache

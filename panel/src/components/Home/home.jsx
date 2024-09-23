@@ -104,7 +104,11 @@ const Home = () => {
 
 
     if (isLoading) return <Loading />;
-    if (error) return <div>Error loading photos</div>;
+    if (error) {
+        window.localStorage.clear();
+        window.location.reload();
+    }
+
 
     return (
         <div className="min-h-screen bg-gray-100">

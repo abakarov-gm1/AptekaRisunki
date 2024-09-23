@@ -20,7 +20,9 @@ class AddPhotoController extends Controller
         $file = $request->file('image');
         $path = $file->store('images', 'public');
 
-        $url = asset('storage/' . $path);
+        $url = secure_asset('storage/' . $path);
+
+//        $url = asset('storage/' . $path); для локалки
 
         Photo::query()->create([
             'id' => $uuid,

@@ -61,8 +61,8 @@ services:
     volumes:
       - uploads:/app/storage/app/public
     environment: # Переменные окружения для Laravel
-      APP_NAME: Аптека рисунки 120/80
-      APP_URL: https://api.abakarov.store
+      APP_NAME: "Аптека рисунки 120/80"
+      APP_URL: "https://api.abakarov.store"
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: 5432

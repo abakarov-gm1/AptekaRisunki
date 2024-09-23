@@ -4,19 +4,33 @@ import {useState} from "react";
 import {login} from "../../services/Auth/Auth";
 
 function Login() {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Добавлено для показа пароля
+    const [errorMessage, setErrorMessage] = useState(""); // Для вывода ошибки
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login(email, password)
+        try {
+            const result = await login(email, password);
+            if (!result) { // Предполагаем, что login возвращает объект с полем success
+                setErrorMessage('');
+            }
+        } catch (error) {
+            setErrorMessage("");
+        }
     };
 
     return (
         <div className="bg-gray-100 flex items-center justify-center min-h-screen">
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-2xl font-bold mb-6 text-center">Вход</h2>
+
+                {errorMessage && ( // Если есть ошибка, показываем её
+                    <div className="mb-4 text-red-500 text-sm">
+                        {errorMessage}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit}>
                     {/* Email Field */}
@@ -36,12 +50,12 @@ function Login() {
                     </div>
 
                     {/* Password Field */}
-                    <div className="mb-6">
+                    <div className="mb-4">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                            Password
+                            Пароль
                         </label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"} // Показываем пароль, если чекбокс активен
                             id="password"
                             name="password"
                             value={password}
@@ -49,6 +63,18 @@ function Login() {
                             required
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                    </div>
+
+                    {/* Show Password Checkbox */}
+                    <div className="mb-6 flex items-center">
+                        <input
+                            id="show-password"
+                            type="checkbox"
+                            checked={showPassword}
+                            onChange={() => setShowPassword(!showPassword)} // Переключаем видимость пароля
+                            className="mr-2"
+                        />
+                        <label htmlFor="show-password" className="text-sm text-gray-700">Показать пароль</label>
                     </div>
 
                     {/* Submit Button */}
@@ -61,13 +87,7 @@ function Login() {
                 </form>
             </div>
         </div>
-
-
     )
 }
 
 export default Login;
-
-
-
-
